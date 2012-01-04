@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+#
+# Process Check Plugin
+# ===
+#
+# This plugin checks an arbitrary process to see if it is running
+#
+# Copyright 2012, Sean Escriva <sean.escriva@gmail.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+
+require 'rubygems' if RUBY_VERSION < '1.9.0'
+require 'sensu-plugin/util/procs'
+
+class CheckProc < Sensu::Plugin::Check::CLI
+
+  check_name 'check_proc'
+
+  def run
+    running = false
+    proc_name = ARGV.first
+
+    running = Sensu::Plugin::Util::Procs.find_proc(proc_name)
+
+    if running
+      ok "#{proc_name} OK - Process is running"
+    else
+      warning "#{proc_name} WARNING - Process is NOT running"
+    end
+
+  end
+
+end
